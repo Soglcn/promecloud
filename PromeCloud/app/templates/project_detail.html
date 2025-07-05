@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{ project.title }}</title>
+    <style>
+        .file-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            margin-top: 20px;
+        }
+
+        embed,
+        iframe,
+        video {
+            width: 90vw;
+            height: 80vh;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{ project.title }}</h1>
+    <p>Keywords: {{ project.keywords }}</p>
+    <div class="file-container">
+        {% if project.filetype.startswith('application/pdf') %}
+        <embed src="{{ url_for('uploaded_file', filename=project.filename) }}" type="application/pdf" />
+        {% elif project.filetype.startswith('video/') %}
+        <video controls>
+            <source src="{{ url_for('uploaded_file', filename=project.filename) }}" type="{{ project.filetype }}">
+            Your browser does not support the video tag.
+        </video>
+        {% elif project.filetype.startswith('image/') %}
+        <img src="{{ url_for('uploaded_file', filename=project.filename) }}" alt="{{ project.title }}"
+            style="max-width:90vw; max-height:80vh; border:1px solid #ccc;">
+        {% else %}
+        <p>Cannot preview this file type.</p>
+        {% endif %}
+    </div>
+
+
+    <p><a href="{{ url_for('uploaded_file', filename=project.filename) }}" download>Download File</a></p>
+
+
+</body>
+
+</html>
